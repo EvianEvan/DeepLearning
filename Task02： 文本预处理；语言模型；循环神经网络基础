@@ -1,0 +1,37 @@
+多层感知机pytorch实现
+import torch
+from torch import nn
+from torch.nn import init
+import numpy as np
+import sys
+sys.path.append("/home/kesci/input")
+import d2lzh1981 as d2l
+
+print(torch.__version__)
+1.3.0
+初始化模型和各个参数
+num_inputs, num_outputs, num_hiddens = 784, 10, 256
+    
+net = nn.Sequential(
+        d2l.FlattenLayer(),
+        nn.Linear(num_inputs, num_hiddens),
+        nn.ReLU(),
+        nn.Linear(num_hiddens, num_outputs), 
+        )
+    
+for params in net.parameters():
+    init.normal_(params, mean=0, std=0.01)
+训练
+batch_size = 256
+train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size,root='/home/kesci/input/FashionMNIST2065')
+loss = torch.nn.CrossEntropyLoss()
+
+optimizer = torch.optim.SGD(net.parameters(), lr=0.5)
+
+num_epochs = 5
+d2l.train_ch3(net, train_iter, test_iter, loss, num_epochs, batch_size, None, None, optimizer)
+epoch 1, loss 0.0031, train acc 0.701, test acc 0.774
+epoch 2, loss 0.0019, train acc 0.821, test acc 0.806
+epoch 3, loss 0.0017, train acc 0.841, test acc 0.805
+epoch 4, loss 0.0015, train acc 0.855, test acc 0.834
+epoch 5, loss 0.0014, train acc 0.866, test acc 0.840
